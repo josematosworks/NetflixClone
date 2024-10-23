@@ -1,0 +1,6 @@
+export const environment = {
+  API_BASE_PATH: 'https://api.themoviedb.org',
+  TMDB_API_BEARER_TOKEN:
+    'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1NGQxYjE3YzFmNWE5Y2IwZjA5OTg5NzNmNTViYjFkZCIsIm5iZiI6MTcyNjQxNTUwMi4wMTAxNjgsInN1YiI6IjY2ZTZlNzM1OWRmYmJkZjBlNmNmN2Y3NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Cv1T3NyJsdxSUuQFPO2KwTNnz8Umhp6KYE4cIKSoraw',
+  TMDB_API_KEY: '54d1b17c1f5a9cb0f0998973f55bb1dd'
+};
