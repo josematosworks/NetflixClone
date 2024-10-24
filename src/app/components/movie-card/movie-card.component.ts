@@ -1,8 +1,17 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Renderer2
+} from '@angular/core';
+import { ModalDirective } from '@app/directives/modal.directive';
 import { MovieUpcomingList200ResponseResultsInner } from '@app/tmdb-api';
-import { WatchListService } from '@core/services/watch-list.service';
 import { AuthService } from '@core/services/auth.service';
+import { WatchListService } from '@core/services/watch-list.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
@@ -10,9 +19,9 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-movie-card',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage, FontAwesomeModule],
+  imports: [CommonModule, NgOptimizedImage, FontAwesomeModule, ModalDirective],
   template: `
-    <div class="relative w-48">
+    <div class="relative w-48" appModal>
       <img
         [ngSrc]="imageUrl"
         [alt]="movie.title"
@@ -23,15 +32,6 @@ import { Subscription } from 'rxjs';
         (error)="onImageError($event)"
         (load)="onImageLoad()"
         class="w-full h-auto" />
-      <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center bg-gray-200">
-        <span class="text-gray-500">Loading...</span>
-      </div>
-      <div *ngIf="!isLoading" class="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black to-transparent">
-        <span class="text-white text-xl font-bold">{{ movie.title }}</span>
-        <span *ngIf="movie.vote_average" class="text-white text-sm ml-2">{{
-          movie.vote_average | number: '1.1-1'
-        }}</span>
-      </div>
       <div
         *ngIf="isRecentlyAdded"
         class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-2 py-1 m-2 rounded">
@@ -48,6 +48,31 @@ import { Subscription } from 'rxjs';
         class="absolute bottom-2 right-2 bg-gray-800 text-white rounded-full p-2 hover:bg-gray-700">
         <fa-icon [icon]="isInWatchList ? faMinus : faPlus"></fa-icon>
       </button>
+
+      <div class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+        <div class="relative w-[667px] h-[612px] rounded-lg overflow-hidden">
+          <div
+            class="absolute inset-0 bg-cover bg-center"
+            [ngStyle]="{ 'background-image': 'url(' + backdropUrl + ')' }"></div>
+          <button (click)="closeModal()" class="absolute top-0 right-0 text-white text-4xl pt-0 pr-4 z-10">
+            &times;
+          </button>
+          <div
+            class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 p-6"
+            style="max-height: 100%; overflow-y: auto;">
+            <h2 class="text-3xl font-bold mt-4">{{ movie.title }}</h2>
+            <div class="flex space-x-2 mt-2">
+              <span class="bg-gray-700 px-2 py-1 rounded">2024</span>
+              <span class="bg-gray-700 px-2 py-1 rounded">18+</span>
+              <span class="bg-gray-700 px-2 py-1 rounded">Movie</span>
+              <span class="bg-gray-700 px-2 py-1 rounded">Action</span>
+              <span class="bg-gray-700 px-2 py-1 rounded">Thrillers</span>
+            </div>
+            <p class="mt-4">{{ movie.overview }}</p>
+            <button class="mt-4 bg-red-600 text-white px-6 py-2 rounded">Get Started</button>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -69,7 +94,8 @@ export class MovieCardComponent implements OnInit, OnDestroy {
   constructor(
     private watchListService: WatchListService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -91,7 +117,11 @@ export class MovieCardComponent implements OnInit, OnDestroy {
   }
 
   get imageUrl(): string {
-    return `https://image.tmdb.org/t/p/w500/${this.movie.poster_path}`;
+    return `https://image.tmdb.org/t/p/w500${this.movie.poster_path}`;
+  }
+
+  get backdropUrl(): string {
+    return `https://image.tmdb.org/t/p/original${this.movie.backdrop_path}`;
   }
 
   onImageError(event: Event): void {
@@ -110,5 +140,12 @@ export class MovieCardComponent implements OnInit, OnDestroy {
       this.watchListService.addToWatchList(this.movie);
     }
     this.isInWatchList = !this.isInWatchList;
+  }
+
+  closeModal(): void {
+    const modal = this.renderer.selectRootElement('.modal');
+    if (modal) {
+      this.renderer.addClass(modal, 'hidden');
+    }
   }
 }
