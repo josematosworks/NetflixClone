@@ -42,12 +42,6 @@ import { Subscription } from 'rxjs';
         class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-2 py-1 m-2 rounded">
         TOP 10
       </div>
-      <button
-        *ngIf="isAuthenticated"
-        (click)="toggleWatchList()"
-        class="absolute bottom-2 right-2 bg-gray-800 text-white rounded-full p-2 hover:bg-gray-700">
-        <fa-icon [icon]="isInWatchList ? faMinus : faPlus"></fa-icon>
-      </button>
 
       <div class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
         <div class="relative w-[667px] h-[612px] rounded-lg overflow-hidden">
@@ -70,6 +64,13 @@ import { Subscription } from 'rxjs';
             </div>
             <p class="mt-4">{{ movie.overview }}</p>
             <button class="mt-4 bg-red-600 text-white px-6 py-2 rounded">Get Started</button>
+            <button
+              *ngIf="isAuthenticated"
+              (click)="toggleWatchList()"
+              [title]="isInWatchList ? 'Remove from Watchlist' : 'Add to Watchlist'"
+              class="absolute bottom-4 right-4 bg-gray-800 text-white rounded-full p-2 w-10 hover:bg-gray-700">
+              <fa-icon [icon]="isInWatchList ? faMinus : faPlus"></fa-icon>
+            </button>
           </div>
         </div>
       </div>
@@ -92,10 +93,10 @@ export class MovieCardComponent implements OnInit, OnDestroy {
   private authSubscription: Subscription | null = null;
 
   constructor(
-    private watchListService: WatchListService,
-    private authService: AuthService,
-    private cdr: ChangeDetectorRef,
-    private renderer: Renderer2
+    private readonly watchListService: WatchListService,
+    private readonly authService: AuthService,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -117,11 +118,11 @@ export class MovieCardComponent implements OnInit, OnDestroy {
   }
 
   get imageUrl(): string {
-    return `https://image.tmdb.org/t/p/w500${this.movie.poster_path}`;
+    return `https://image.tmdb.org/t/p/w185${this.movie.poster_path}`;
   }
 
   get backdropUrl(): string {
-    return `https://image.tmdb.org/t/p/original${this.movie.backdrop_path}`;
+    return `https://image.tmdb.org/t/p/w780${this.movie.backdrop_path}`;
   }
 
   onImageError(event: Event): void {
