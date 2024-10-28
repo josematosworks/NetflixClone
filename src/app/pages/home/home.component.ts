@@ -10,14 +10,21 @@ import { HomeResolverData } from './home.resolver';
   standalone: true,
   imports: [CommonModule, FeaturedSectionComponent, CarouselComponent],
   template: `
-    <body class="bg-black text-white font-roboto">
-      <app-featured-section [movie]="movieData.featuredMovie"></app-featured-section>
-      <section class="py-8">
-        <app-carousel title="Popular on Netflix" [movies]="movieData.popularMovies"></app-carousel>
-        <app-carousel title="Trending Now" [movies]="movieData.trendingMovies"></app-carousel>
-        <app-carousel title="Upcoming Movies" [movies]="movieData.upcomingMovies"></app-carousel>
+    <main role="main" class="bg-black text-white font-roboto" aria-label="Netflix home content">
+      <app-featured-section [movie]="movieData.featuredMovie" aria-label="Featured movie section">
+      </app-featured-section>
+      <section class="py-8" aria-label="Movie collections">
+        <app-carousel
+          title="Popular on Netflix"
+          [movies]="movieData.popularMovies"
+          aria-label="Popular movies carousel">
+        </app-carousel>
+        <app-carousel title="Trending Now" [movies]="movieData.trendingMovies" aria-label="Trending movies carousel">
+        </app-carousel>
+        <app-carousel title="Upcoming Movies" [movies]="movieData.upcomingMovies" aria-label="Upcoming movies carousel">
+        </app-carousel>
       </section>
-    </body>
+    </main>
   `
 })
 export class HomeComponent {

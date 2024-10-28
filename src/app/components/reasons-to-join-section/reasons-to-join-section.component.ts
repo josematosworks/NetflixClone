@@ -8,13 +8,18 @@ import { faChild, faDownload, faMobileAlt, faTv } from '@fortawesome/free-solid-
   standalone: true,
   imports: [CommonModule, FontAwesomeModule],
   template: `
-    <section class="bg-gray-900 py-12">
+    <section class="bg-gray-900 py-12" aria-labelledby="reasons-heading">
       <div class="max-w-screen-xl mx-auto">
-        <h2 class="text-3xl font-bold mb-6">More Reasons to Join</h2>
-        <div class="grid grid-cols-4 gap-6">
+        <h2 id="reasons-heading" class="text-3xl font-bold mb-6">More Reasons to Join</h2>
+        <div class="grid grid-cols-4 gap-6" role="list">
           <!-- Reason Items -->
-          <div class="bg-gray-800 p-6 rounded-lg" *ngFor="let reason of reasons">
-            <fa-icon [icon]="reason.icon" [ngClass]="reason.iconColor + ' text-3xl'"></fa-icon>
+          <div
+            class="bg-gray-800 p-6 rounded-lg"
+            role="listitem"
+            *ngFor="let reason of reasons"
+            tabindex="0"
+            [attr.aria-label]="reason.title + ': ' + reason.description">
+            <fa-icon [icon]="reason.icon" [ngClass]="reason.iconColor + ' text-3xl'" aria-hidden="true"></fa-icon>
             <h3 class="mt-4 font-bold text-xl">{{ reason.title }}</h3>
             <p class="mt-2">{{ reason.description }}</p>
           </div>

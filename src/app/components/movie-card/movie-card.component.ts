@@ -31,43 +31,67 @@ import { Subscription } from 'rxjs';
         sizes="(max-width: 768px) 100vw, 192px"
         (error)="onImageError($event)"
         (load)="onImageLoad()"
-        class="w-full h-auto" />
+        class="w-full h-auto"
+        [attr.aria-busy]="isLoading"
+        role="img" />
+
       <div
         *ngIf="isRecentlyAdded"
-        class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-2 py-1 m-2 rounded">
+        class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-2 py-1 m-2 rounded"
+        role="status"
+        aria-label="New release">
         New
       </div>
       <div
         *ngIf="isTopTen"
-        class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-2 py-1 m-2 rounded">
+        class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-2 py-1 m-2 rounded"
+        role="status"
+        [attr.aria-label]="ranking ? 'Top ' + ranking + ' movie' : 'Top 10 movie'">
         TOP 10
       </div>
 
-      <div class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-        <div class="relative w-[667px] h-[612px] rounded-lg overflow-hidden">
+      <div
+        class="modal hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+        role="dialog"
+        aria-labelledby="modalTitle"
+        aria-modal="true"
+        (keydown.escape)="closeModal()">
+        <div class="relative w-[667px] h-[612px] rounded-lg overflow-hidden" role="document">
           <div
             class="absolute inset-0 bg-cover bg-center"
-            [ngStyle]="{ 'background-image': 'url(' + backdropUrl + ')' }"></div>
-          <button (click)="closeModal()" class="absolute top-0 right-0 text-white text-4xl pt-0 pr-4 z-10">
+            [ngStyle]="{ 'background-image': 'url(' + backdropUrl + ')' }"
+            role="img"
+            [attr.aria-label]="'Backdrop image for ' + movie.title"></div>
+          <button
+            (click)="closeModal()"
+            class="absolute top-0 right-0 text-white text-4xl pt-0 pr-4 z-10"
+            aria-label="Close modal">
             &times;
           </button>
           <div
             class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 p-6"
             style="max-height: 100%; overflow-y: auto;">
-            <h2 class="text-3xl font-bold mt-4">{{ movie.title }}</h2>
-            <div class="flex space-x-2 mt-2">
-              <span class="bg-gray-700 px-2 py-1 rounded">2024</span>
-              <span class="bg-gray-700 px-2 py-1 rounded">18+</span>
-              <span class="bg-gray-700 px-2 py-1 rounded">Movie</span>
-              <span class="bg-gray-700 px-2 py-1 rounded">Action</span>
-              <span class="bg-gray-700 px-2 py-1 rounded">Thrillers</span>
+            <h2 id="modalTitle" class="text-3xl font-bold mt-4">{{ movie.title }}</h2>
+            <div class="flex space-x-2 mt-2" role="list" aria-label="Movie details">
+              <span class="bg-gray-700 px-2 py-1 rounded" role="listitem">2024</span>
+              <span class="bg-gray-700 px-2 py-1 rounded" role="listitem">18+</span>
+              <span class="bg-gray-700 px-2 py-1 rounded" role="listitem">Movie</span>
+              <span class="bg-gray-700 px-2 py-1 rounded" role="listitem">Action</span>
+              <span class="bg-gray-700 px-2 py-1 rounded" role="listitem">Thrillers</span>
             </div>
             <p class="mt-4">{{ movie.overview }}</p>
-            <button class="mt-4 bg-red-600 text-white px-6 py-2 rounded">Get Started</button>
+            <button
+              class="mt-4 bg-red-600 text-white px-6 py-2 rounded"
+              [attr.tabindex]="'Get Started watching {{ movie.title }}'">
+              Get Started
+            </button>
             <button
               *ngIf="isAuthenticated"
               (click)="toggleWatchList()"
-              [title]="isInWatchList ? 'Remove from Watchlist' : 'Add to Watchlist'"
+              [attr.aria-label]="
+                isInWatchList ? 'Remove ' + movie.title + ' from Watchlist' : 'Add ' + movie.title + ' to Watchlist'
+              "
+              [attr.aria-pressed]="isInWatchList"
               class="absolute bottom-4 right-4 bg-gray-800 text-white rounded-full p-2 w-10 hover:bg-gray-700">
               <fa-icon [icon]="isInWatchList ? faMinus : faPlus"></fa-icon>
             </button>

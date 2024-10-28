@@ -8,12 +8,36 @@ import { CarouselComponent } from '@components/carousel/carousel.component';
   standalone: true,
   imports: [CarouselComponent],
   template: `
-    <div class="bg-black text-white py-8">
-      <h1 class="text-4xl font-bold mb-6 px-4">New & Popular</h1>
-      <app-carousel title="New Releases" [movies]="newReleases"></app-carousel>
-      <app-carousel title="Popular Movies" [movies]="popularMovies"></app-carousel>
-      <app-carousel title="Popular TV Shows" [movies]="popularTVShows"></app-carousel>
-    </div>
+    <main class="bg-black text-white py-8" role="main">
+      <h1 class="text-4xl font-bold mb-6 px-4" tabindex="0">New & Popular</h1>
+      <section aria-labelledby="new-releases-heading">
+        <app-carousel
+          id="new-releases-heading"
+          title="New Releases"
+          [movies]="newReleases"
+          role="region"
+          aria-label="New movie releases carousel">
+        </app-carousel>
+      </section>
+      <section aria-labelledby="popular-movies-heading">
+        <app-carousel
+          id="popular-movies-heading"
+          title="Popular Movies"
+          [movies]="popularMovies"
+          role="region"
+          aria-label="Popular movies carousel">
+        </app-carousel>
+      </section>
+      <section aria-labelledby="popular-tv-heading">
+        <app-carousel
+          id="popular-tv-heading"
+          title="Popular TV Shows"
+          [movies]="popularTVShows"
+          role="region"
+          aria-label="Popular TV shows carousel">
+        </app-carousel>
+      </section>
+    </main>
   `
 })
 export class NewAndPopularComponent {

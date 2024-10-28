@@ -16,12 +16,14 @@ import { TrendingSectionComponent } from '@components/trending-section/trending-
     FaqSectionComponent
   ],
   template: `
-    <app-hero-section></app-hero-section>
-    <app-trending-section></app-trending-section>
-    <app-reasons-to-join-section></app-reasons-to-join-section>
-    @defer {
-      <app-faq-section></app-faq-section>
-    }
+    <main role="main" aria-label="Main content">
+      <app-hero-section></app-hero-section>
+      <app-trending-section></app-trending-section>
+      <app-reasons-to-join-section></app-reasons-to-join-section>
+      @defer (on viewport) {
+        <app-faq-section></app-faq-section>
+      }
+    </main>
   `
 })
 export class LandingComponent {}

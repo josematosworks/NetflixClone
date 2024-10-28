@@ -8,12 +8,12 @@ import { HeaderComponent } from '@components/header/header.component';
   standalone: true,
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   template: `
-    <div class="flex flex-col min-h-screen bg-black text-white font-roboto">
-      <app-header></app-header>
-      <main class="flex-grow">
+    <div class="flex flex-col min-h-screen bg-black text-white font-roboto" role="application">
+      <app-header role="banner"></app-header>
+      <main class="flex-grow" role="main" tabindex="-1">
         <router-outlet></router-outlet>
       </main>
-      <app-footer></app-footer>
+      <app-footer role="contentinfo"></app-footer>
     </div>
   `
 })
