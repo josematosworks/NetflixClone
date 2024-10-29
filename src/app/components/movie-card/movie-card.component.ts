@@ -3,11 +3,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
   OnDestroy,
   OnInit,
-  Renderer2,
-  ElementRef
+  Renderer2
 } from '@angular/core';
 import { ModalDirective } from '@app/directives/modal.directive';
 import { MovieUpcomingList200ResponseResultsInner } from '@app/tmdb-api';
@@ -58,7 +58,10 @@ import { Subscription } from 'rxjs';
         aria-modal="true"
         (keydown.escape)="closeModal()"
         (click)="onModalClick($event)">
-        <div class="relative w-[667px] h-[612px] rounded-lg overflow-hidden" role="document" (click)="$event.stopPropagation()">
+        <div
+          class="relative w-[667px] h-[612px] rounded-lg overflow-hidden"
+          role="document"
+          (click)="$event.stopPropagation()">
           <div
             class="absolute inset-0 bg-cover bg-center"
             [ngStyle]="{ 'background-image': 'url(' + backdropUrl + ')' }"

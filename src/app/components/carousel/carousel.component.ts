@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
 import { MovieUpcomingList200ResponseResultsInner } from '@app/tmdb-api';
 import { MovieCardComponent } from '@components/movie-card/movie-card.component';
 
@@ -12,6 +12,7 @@ import { MovieCardComponent } from '@components/movie-card/movie-card.component'
       class="mb-8"
       role="region"
       [attr.aria-label]="title + ' Carousel'"
+      tabindex="0"
       (keydown)="handleKeyboardNavigation($event)">
       <h2 class="text-2xl font-bold mb-4" id="carousel-{{ title }}">{{ title }}</h2>
       <div
@@ -25,7 +26,7 @@ import { MovieCardComponent } from '@components/movie-card/movie-card.component'
           [isTopTen]="isTopTen(movie)"
           [attr.aria-posinset]="i + 1"
           [attr.aria-setsize]="movies.length"
-          [attr.tabindex]="i === currentIndex ? 0 : -1"
+          tabindex="0"
           (focus)="currentIndex = i">
         </app-movie-card>
       </div>
@@ -37,6 +38,8 @@ export class CarouselComponent {
   @Input() movies: MovieUpcomingList200ResponseResultsInner[] = [];
 
   currentIndex = 0;
+
+  @ViewChildren(MovieCardComponent, { read: ElementRef }) movieCards!: QueryList<ElementRef>;
 
   trackByMovieId(_: number, movie: MovieUpcomingList200ResponseResultsInner): number {
     return movie.id ?? 0;
@@ -76,13 +79,22 @@ export class CarouselComponent {
         this.currentIndex = maxIndex;
         this.focusCurrentCard();
         break;
+      case 'Tab':
+        event.preventDefault();
+        if (event.shiftKey) {
+          this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.currentIndex;
+        } else {
+          this.currentIndex = this.currentIndex < maxIndex ? this.currentIndex + 1 : this.currentIndex;
+        }
+        this.focusCurrentCard();
+        break;
     }
   }
 
   private focusCurrentCard(): void {
     setTimeout(() => {
-      const cards = document.querySelectorAll('app-movie-card');
-      (cards[this.currentIndex] as HTMLElement)?.focus();
+      const card = this.movieCards.toArray()[this.currentIndex];
+      (card.nativeElement as HTMLElement)?.focus();
     });
   }
 }
