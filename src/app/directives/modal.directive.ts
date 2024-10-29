@@ -15,7 +15,12 @@ export class ModalDirective {
     const modal = this.el.nativeElement.querySelector('.modal');
     if (modal) {
       const isVisible = modal.classList.contains('hidden');
-      this.renderer[isVisible ? 'removeClass' : 'addClass'](modal, 'hidden');
+      if (isVisible) {
+        this.renderer.removeClass(modal, 'hidden');
+        modal.focus();
+      } else {
+        this.renderer.addClass(modal, 'hidden');
+      }
     }
   }
 }

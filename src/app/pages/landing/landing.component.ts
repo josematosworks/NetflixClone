@@ -22,6 +22,8 @@ import { TrendingSectionComponent } from '@components/trending-section/trending-
       <app-reasons-to-join-section></app-reasons-to-join-section>
       @defer (on viewport) {
         <app-faq-section></app-faq-section>
+      } @placeholder {
+        <div class="min-h-[100px]">Loading FAQs...</div>
       }
     </main>
   `

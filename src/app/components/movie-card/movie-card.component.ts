@@ -6,7 +6,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Renderer2
+  Renderer2,
+  ElementRef
 } from '@angular/core';
 import { ModalDirective } from '@app/directives/modal.directive';
 import { MovieUpcomingList200ResponseResultsInner } from '@app/tmdb-api';
@@ -55,8 +56,9 @@ import { Subscription } from 'rxjs';
         role="dialog"
         aria-labelledby="modalTitle"
         aria-modal="true"
-        (keydown.escape)="closeModal()">
-        <div class="relative w-[667px] h-[612px] rounded-lg overflow-hidden" role="document">
+        (keydown.escape)="closeModal()"
+        (click)="onModalClick($event)">
+        <div class="relative w-[667px] h-[612px] rounded-lg overflow-hidden" role="document" (click)="$event.stopPropagation()">
           <div
             class="absolute inset-0 bg-cover bg-center"
             [ngStyle]="{ 'background-image': 'url(' + backdropUrl + ')' }"
@@ -120,7 +122,8 @@ export class MovieCardComponent implements OnInit, OnDestroy {
     private readonly watchListService: WatchListService,
     private readonly authService: AuthService,
     private readonly cdr: ChangeDetectorRef,
-    private readonly renderer: Renderer2
+    private readonly renderer: Renderer2,
+    private readonly el: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -168,9 +171,13 @@ export class MovieCardComponent implements OnInit, OnDestroy {
   }
 
   closeModal(): void {
-    const modal = this.renderer.selectRootElement('.modal');
+    const modal = this.el.nativeElement.querySelector('.modal');
     if (modal) {
       this.renderer.addClass(modal, 'hidden');
     }
+  }
+
+  onModalClick(event: MouseEvent): void {
+    this.closeModal();
   }
 }
