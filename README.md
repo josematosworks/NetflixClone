@@ -1,3 +1,15 @@
+## 📸 Preview Images
+
+Here are some preview images of the Netflix Clone application:
+
+### Landing Page
+![Landing Page](/src/assets/preview/netflix-clone-landing.png)
+
+### Home Page
+![Home Page](/src/assets/preview/netflix-clone-home.png)
+
+
+
 # Netflix Clone: Angular Best Practices Showcase
 
 ## 🎯 Project Goal
